@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,Suspense } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { OrbitControls, useGLTF, ScrollControls, useScroll } from '@react-three/drei';
 import { AnimationMixer,TextureLoader  } from 'three';
@@ -81,13 +81,15 @@ function Sky() {
 
 
 
-  const loader = require('../components/alpha.hdr') 
+  const loader = require('../components/driving_school_4k.hdr') 
   return (
     <Environment background={true} files={loader} />
   );
 }
 
-
+function Loading() {
+  return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',width:'100vw'}}><h2 >🌀 Loading...</h2></div>
+}
 
 export default function ObjectThree() {
   const style = {
@@ -100,15 +102,19 @@ export default function ObjectThree() {
 
   return (
     <div className="holdCanvas example" style={{ overflowX: "hidden" }}>
-      <Canvas className="cnv" style={{ width: '100vw', height: '100vh', backgroundColor: 'red' }}>
-        <ScrollControls pages={1} id="scrollit" className="scrollControls" style={style}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[1, 1, 1]} intensity={9} />
-          <Sky/>
-          <Model />
-      
-        </ScrollControls>
-      </Canvas>
+ <Suspense fallback={<Loading/>}>
+ <Canvas className="cnv" style={{ width: '100vw', height: '100vh'}}>
+     
+     <ScrollControls pages={1} id="scrollit" className="scrollControls" style={style}>
+         <ambientLight intensity={0.7} />
+         <directionalLight position={[1, 1, 1]} intensity={5} />
+         <Sky/>
+         <Model />
+     
+       </ScrollControls>
+
+     </Canvas>
+ </Suspense>
     </div>
   );
 }
